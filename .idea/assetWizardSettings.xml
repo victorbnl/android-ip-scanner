@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/refresh/baseline_refresh_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/router/baseline_router_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -29,7 +29,7 @@
                         <option name="values">
                           <map>
                             <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_baseline_refresh_24" />
+                            <entry key="outputName" value="ic_baseline_router_24" />
                             <entry key="sourceFile" value="C:\Users\Victor\AndroidStudioProjects\AndroidNetworkScanner" />
                           </map>
                         </option>
