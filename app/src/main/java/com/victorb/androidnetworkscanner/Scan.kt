@@ -1,9 +1,8 @@
 package com.victorb.androidnetworkscanner
 
 import android.app.Activity
-import android.net.DhcpInfo
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.net.Inet4Address
 import java.net.InetAddress
@@ -15,25 +14,38 @@ class Scanner(private val ip: Int,
               private val resultsAdapter: ResultsAdapter,
               private val activity: Activity) {
 
-    private val TIMEOUT: Int = 2000;
+    private val timeout: Int = 2000
+    private lateinit var scanningJob: Job
+    private val checkingJobs: MutableList<Job> = arrayListOf<Job>()
+    private var networkPrefixLength: Int = 24
 
-    fun startScan() {
-        // Get subnet mask
-        var networkPrefixLength: Int = 0;
+    init {
+        // Get the network prefix length
+        networkPrefixLength = 0;
         val inetAddress: InetAddress = InetAddress.getByAddress(ipToBytes(ip));
         val networkInterface: NetworkInterface = NetworkInterface.getByInetAddress(inetAddress);
         val interfaceAddresses: MutableList<InterfaceAddress> = networkInterface.interfaceAddresses
         for (address in interfaceAddresses) if (address.address is Inet4Address) networkPrefixLength =
             address.networkPrefixLength.toInt()
+    }
 
-        // Clear results
-        resultsList.clear()
-
+    fun startScan() {
         // Start scan
-        GlobalScope.launch {
+        scanningJob = GlobalScope.launch {
             checkIps(ip, networkPrefixLength)
         }
+    }
 
+    fun stopScan() {
+        // Start the scan job (which start the recursive scan function)
+        scanningJob.cancel()
+
+        // Stop all the checking jobs
+        for (job in checkingJobs) job.cancel()
+    }
+
+    fun clearList() {
+        resultsList.clear()
     }
 
     // Recursive function to scan the network
@@ -60,16 +72,17 @@ class Scanner(private val ip: Int,
     }
 
     private fun checkIp(ip: Int) {
-        GlobalScope.launch {
+        checkingJobs.add(GlobalScope.launch {
             val inetAddress: InetAddress = InetAddress.getByAddress(ipToBytes(ip))
-            if (inetAddress.isReachable(TIMEOUT)) {
+            if (inetAddress.isReachable(timeout)) {
                 resultsList.add(Device(ipToString(ip), if (ip == this@Scanner.ip) "Your phone" else inetAddress.hostName.split(".")[0]))
                 activity.runOnUiThread {
                     resultsAdapter.notifyDataSetChanged()
                 }
             }
-        }
+        })
     }
+
 
     private fun ipToString(ip: Int) = String.format(
         "%d.%d.%d.%d",
