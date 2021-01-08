@@ -31,10 +31,10 @@ jobs:
           java-version: 1.8
           
       - name: Write the keystore file
-        uses: timheuer/base64-to-file@v1.0.4
+        uses: kitek/decode-base64-into-file-action@1.0
         with:
-          fileName: signing-key.jks
-          encodedString: ${{ secrets.KEYSTORE_FILE }}
+          encoded-value: ${{ secrets.KEYSTORE_FILE }}
+          destination-file: signing-key.jks
           
       - name: Testing
         run: "ls ; echo ; echo '===='; echo; pwd"
