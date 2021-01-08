@@ -39,8 +39,20 @@ jobs:
       - name: Assemble release
         run: ./gradlew assembleRelease
       
-      - name: Upload APK
-        uses: actions/upload-artifact@v2
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: Release APK
-          path: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+      
+      - name: Upload APK to the release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./app/build/outputs/apk/release/app-release-unsigned.apk
+          asset_name: android-network-scanner.apk
