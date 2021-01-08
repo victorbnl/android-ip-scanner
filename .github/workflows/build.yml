@@ -34,7 +34,7 @@ jobs:
         uses: kitek/decode-base64-into-file-action@1.0
         with:
           encoded-value: ${{ secrets.KEYSTORE_FILE }}
-          destination-file: ${{ GITHUB_WORKSPACE }}/signing-key.jks
+          destination-file: $GITHUB_WORKSPACE/signing-key.jks
           
       - name: Testing
         run: "ls ; echo ; echo '===='; echo; pwd"
@@ -46,7 +46,7 @@ jobs:
         run: ./gradlew build
         
       - name: Assemble release
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ GITHUB_WORKSPACE }}/signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=$GITHUB_WORKSPACE/signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
       
       - name: Testing 2
         run: "ls ; echo ; echo '===='; echo; pwd"
