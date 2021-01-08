@@ -35,6 +35,9 @@ jobs:
         with:
           fileName: signing-key.jks
           encodedString: ${{ secrets.KEYSTORE_FILE }}
+          
+      - name: Testing
+        run: "ls ; echo ; echo '===='; echo; pwd"
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -43,8 +46,11 @@ jobs:
         run: ./gradlew build
         
       - name: Assemble release
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=./signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
       
+      - name: Testing 2
+        run: "ls ; echo ; echo '===='; echo; pwd"
+        
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
