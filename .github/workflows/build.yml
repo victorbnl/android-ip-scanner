@@ -40,7 +40,7 @@ jobs:
         run: ./gradlew build
         
       - name: Assemble release
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
+        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
         
       - name: Create GitHub release
         id: create_release
