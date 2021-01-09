@@ -31,13 +31,7 @@ jobs:
           java-version: 1.8
           
       - name: Write the keystore file
-        uses: kitek/decode-base64-into-file-action@1.0
-        with:
-          encoded-value: ${{ secrets.KEYSTORE_FILE }}
-          destination-file: ${{ github.workspace }}/signing-key.jks
-          
-      - name: Testing
-        run: "ls ; echo ; echo '===='; echo; pwd"
+        run: base64 -d ${{ secrets.KEYSTORE_FILE }} > signing-key.jks
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
@@ -47,9 +41,6 @@ jobs:
         
       - name: Assemble release
         run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks -Pandroid.injected.signing.store.password=$KEYSTORE_PASSWORD -Pandroid.injected.signing.key.alias=$KEY_ALIAS -Pandroid.injected.signing.key.password=$KEY_PASSWORD
-      
-      - name: Testing 2
-        run: "ls ; echo ; echo '===='; echo; pwd"
         
       - name: Create GitHub release
         id: create_release
