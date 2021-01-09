@@ -31,7 +31,7 @@ jobs:
           java-version: 1.8
           
       - name: Write the keystore file
-        run: echo ${{ secrets.KEYSTORE_FILE }} | base64 -d > signing-key.jks
+        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > signing-key.jks
       
       - name: Make gradlew executable
         run: chmod +x ./gradlew
