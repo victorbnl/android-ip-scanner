@@ -1,6 +1,8 @@
 package com.victorb.androidnetworkscanner
 
 import android.app.Activity
+import android.view.View
+import android.widget.ProgressBar
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -12,11 +14,12 @@ import java.net.NetworkInterface
 class Scanner(private val ip: Int,
               private val resultsList: MutableList<Device>,
               private val resultsAdapter: ResultsAdapter,
+              private val progressBar: ProgressBar,
               private val activity: Activity) {
 
     private val timeout: Int = 2000
     private lateinit var scanningJob: Job
-    private val checkingJobs: MutableList<Job> = arrayListOf<Job>()
+    private val checkingJobs: MutableList<Job> = arrayListOf()
     private var networkPrefixLength: Int = 24
 
     init {
@@ -30,9 +33,17 @@ class Scanner(private val ip: Int,
     }
 
     fun startScan() {
+        // Set progress bar on
+        setProgressBarVisibility(View.VISIBLE)
+
         // Start scan
         scanningJob = GlobalScope.launch {
             checkIps(ip, networkPrefixLength)
+        }
+
+        // Hide progress bar when finished
+        scanningJob.invokeOnCompletion {
+            setProgressBarVisibility(View.GONE)
         }
     }
 
@@ -42,15 +53,15 @@ class Scanner(private val ip: Int,
 
         // Stop all the checking jobs
         for (job in checkingJobs) job.cancel()
-    }
 
-    fun clearList() {
-        resultsList.clear()
+        // Remove progress bar
+        setProgressBarVisibility(View.GONE)
     }
 
     // Recursive function to scan the network
     private fun checkIps(ip: Int, index: Int) {
-        if (index == 24) { // If editing the last byte of the ip
+        // If editing the last byte of the ip
+        if (index == 24) {
             for (i: Int in 0..255) {
                 checkIp(
                     (ip and
@@ -83,6 +94,13 @@ class Scanner(private val ip: Int,
         })
     }
 
+    private fun setProgressBarVisibility(int: Int) {
+        activity.runOnUiThread {
+            progressBar.visibility = int
+        }
+    }
+
+    private fun reverseIpBytes(ip: Int): Int = ((ip and 0xff) shl 24) + ((ip and 0xff) shl 16) + ((ip and 0xff) shl 8) + (ip and 0xff)
 
     private fun ipToString(ip: Int) = String.format(
         "%d.%d.%d.%d",
