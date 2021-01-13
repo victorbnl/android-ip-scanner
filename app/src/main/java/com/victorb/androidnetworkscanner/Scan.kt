@@ -18,7 +18,7 @@ class Scanner(private val ip: Int,
     // The timeout of the network request
     private val timeout: Int = 2000
 
-    
+
     private lateinit var scanningJob: Job
 
     private val checkingJobsScope = CoroutineScope(Dispatchers.IO)
@@ -128,7 +128,7 @@ class Scanner(private val ip: Int,
         (ip shr 24 and 0xff)
     )
 
-    // Converts the ip to a four bytes array
+    // Converts the ip to a four-byte array
     private fun ipToBytes(ip: Int) = arrayOf(
         (ip and 0xff).toByte(),
         (ip shr 8 and 0xff).toByte(),
