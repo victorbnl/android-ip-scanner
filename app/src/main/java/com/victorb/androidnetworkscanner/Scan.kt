@@ -1,6 +1,7 @@
 package com.victorb.androidnetworkscanner
 
 import android.app.Activity
+import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import kotlinx.coroutines.*
@@ -28,6 +29,10 @@ class Scanner(private val phoneIp: Int,
     // The network prefix length
     private var networkPrefixLength: Int = 24
 
+    /**
+     * Initialize the class
+     * Gets the network mask
+     */
     init {
         val inetAddress: InetAddress = InetAddress.getByAddress(ipToBytes(phoneIp));
 
@@ -118,6 +123,9 @@ class Scanner(private val phoneIp: Int,
 
         // Check if it's reachable
         if (inetAddress.isReachable(timeout)) {
+            // Log it!
+            Log.i(null, "Found " + ipToString(ip) + " with hostname " + inetAddress.hostName)
+
             // Add the device in the results list with its ip and hostname
             resultsList.add(Device(ipToString(ip),
                     if (ip == this@Scanner.phoneIp)

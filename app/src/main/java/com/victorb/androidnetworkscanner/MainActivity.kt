@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * The main function
-     *
      * Sets up the recycler view, initializes WiFi and starts the scan
      */
     override fun onCreate(savedInstanceState: Bundle?) {
