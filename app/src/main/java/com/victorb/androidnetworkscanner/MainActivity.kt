@@ -25,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var wifiManager: WifiManager
     private lateinit var progressBar: ProgressBar
 
+    /**
+     * The main function
+     *
+     * Sets up the recycler view, initializes WiFi and starts the scan
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         // Default behaviour
         super.onCreate(savedInstanceState)
@@ -34,15 +39,10 @@ class MainActivity : AppCompatActivity() {
         val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar)
 
-        // Set LayoutManager and Adapter for RecyclerView
+        // Set the LayoutManager and the Adapter for RecyclerView
         val recyclerView: RecyclerView = findViewById(R.id.recyclerview_results)
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
-
-        // When reloading activity
-        if (savedInstanceState != null) {
-            resultsList = savedInstanceState.getParcelableArrayList<Device>("resultsList") as ArrayList<Device>
-        }
 
         // Get the progress bar
         progressBar = findViewById(R.id.progress_bar)
@@ -54,6 +54,9 @@ class MainActivity : AppCompatActivity() {
         startScan()
     }
 
+    /**
+     * Define actions for toolbar buttons
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         // Control menu buttons (toolbar buttons)
         when (item.itemId) {
@@ -67,25 +70,34 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Sets the menu to use for the toolbar buttons
+     */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Set the menu (actually the refresh button)
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelableArrayList("resultsList", resultsList)
-        super.onSaveInstanceState(outState)
-    }
-
+    /**
+     * Stops the scan, clears the list and start a new scan
+     */
     private fun refresh() {
+        // Stop the scan
         scanner.stopScan()
+
+        // Clear the list
         resultsList.clear()
+        resultsAdapter.notifyDataSetChanged()
+
+        // Start the scan
         startScan()
     }
 
+    /**
+     * Starts a scan (only if wifi is enabled)
+     */
     private fun startScan() {
-        Toast.makeText(this, R.string.starting_scan, Toast.LENGTH_LONG).show()
         // Check if Wifi is enabled
         if (wifiManager.isWifiEnabled) {
             // Start scan
