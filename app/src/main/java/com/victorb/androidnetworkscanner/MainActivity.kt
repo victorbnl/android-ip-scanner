@@ -55,8 +55,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Control menu buttons (toolbar buttons)
         when (item.itemId) {
+            // When refresh menu button clicked
             R.id.action_refresh -> {
+                // Stops the scan, clears the list and starts a new scan
                 refresh()
                 return true
             }
