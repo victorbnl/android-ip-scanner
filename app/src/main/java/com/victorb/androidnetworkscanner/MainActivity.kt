@@ -1,29 +1,16 @@
 package com.victorb.androidnetworkscanner
 
-import android.net.wifi.WifiManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.ProgressBar
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.content.getSystemService
-import androidx.core.view.get
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import java.net.InetAddress
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var scanner: Scanner;
-    private var resultsList: ArrayList<Device> = arrayListOf()
-    private var resultsAdapter = ResultsAdapter(resultsList)
-    private lateinit var wifiManager: WifiManager
-    private lateinit var progressBar: ProgressBar
+    private var resultsAdapter = ResultsAdapter()
 
     /**
      * The main function
@@ -43,14 +30,12 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        // Get the progress bar
-        progressBar = findViewById(R.id.progress_bar)
-
-        // Initialize Wifi manager
-        wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
-
         // Start the scan
-        startScan()
+        if (checkWiFiEnabled(this)) {
+            startScan(getPhoneIp(this.applicationContext), 2000, resultsAdapter, this)
+        } else {
+            Toast.makeText(this, R.string.wifi_not_enabled, Toast.LENGTH_LONG)
+        }
     }
 
     /**
@@ -61,9 +46,7 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // When refresh menu button clicked
             R.id.action_refresh -> {
-                // Stops the scan, clears the list and starts a new scan
-                refresh()
-                return true
+                // TODO: Refresh button
             }
         }
         return super.onOptionsItemSelected(item)
@@ -76,35 +59,5 @@ class MainActivity : AppCompatActivity() {
         // Set the menu (actually the refresh button)
         menuInflater.inflate(R.menu.menu, menu)
         return true
-    }
-
-    /**
-     * Stops the scan, clears the list and start a new scan
-     */
-    private fun refresh() {
-        // Stop the scan
-        scanner.stopScan()
-
-        // Clear the list
-        resultsList.clear()
-        resultsAdapter.notifyDataSetChanged()
-
-        // Start the scan
-        startScan()
-    }
-
-    /**
-     * Starts a scan (only if wifi is enabled)
-     */
-    private fun startScan() {
-        // Check if Wifi is enabled
-        if (wifiManager.isWifiEnabled) {
-            // Start scan
-            scanner = Scanner(wifiManager.dhcpInfo.ipAddress, resultsList, resultsAdapter, progressBar, this@MainActivity)
-            scanner.startScan()
-        } else {
-            // Wifi disabled
-            Toast.makeText(this, R.string.wifi_not_enabled, Toast.LENGTH_LONG).show()
-        }
     }
 }

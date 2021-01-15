@@ -1,0 +1,39 @@
+package com.victorb.androidnetworkscanner
+
+import android.content.Context
+import android.net.wifi.WifiManager
+import java.net.Inet4Address
+import java.net.InetAddress
+import java.net.InterfaceAddress
+import java.net.NetworkInterface
+
+/**
+ * Check if WiFi is enabled
+ */
+fun checkWiFiEnabled(context: Context): Boolean = (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled
+
+/**
+ * Get the phone IP
+ */
+fun getPhoneIp(context: Context): Int = (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).dhcpInfo.ipAddress
+
+/**
+ * Get the network mask from the phone IP
+ */
+fun getNetworkPrefixLength(ip: Int): Int {
+    // IP object
+    val inetAddress: InetAddress = InetAddress.getByAddress(ipToBytes(ip));
+
+    // Get the network interfaces
+    val networkInterface: NetworkInterface = NetworkInterface.getByInetAddress(inetAddress);
+    val interfaceAddresses: MutableList<InterfaceAddress> = networkInterface.interfaceAddresses
+
+    // Set the network mask to the one of the first IPv4 interface
+    for (address in interfaceAddresses) {
+        if (address.address is Inet4Address) {
+            return address.networkPrefixLength.toInt()
+        }
+    }
+
+    return -1
+}
