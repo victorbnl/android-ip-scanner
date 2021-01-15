@@ -30,11 +30,18 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        // Start the scan
+        // Get the network prefix length
+        val networkPrefixLength: Int = getNetworkPrefixLength(this)
+
+        // Check if Wifi is enabled and connected and starts the scan
         if (checkWiFiEnabled(this)) {
-            startScan(getPhoneIp(this.applicationContext), 2000, resultsAdapter, this)
+            if (checkWifiConnected(this)) {
+                startScan(getPhoneIp(this.applicationContext), networkPrefixLength, 2000, resultsAdapter, this)
+            } else {
+                Toast.makeText(this, R.string.wifi_not_connected, Toast.LENGTH_LONG).show()
+            }
         } else {
-            Toast.makeText(this, R.string.wifi_not_enabled, Toast.LENGTH_LONG)
+            Toast.makeText(this, R.string.wifi_not_enabled, Toast.LENGTH_LONG).show()
         }
     }
 

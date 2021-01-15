@@ -2,5 +2,6 @@
     <string name="app_name">Android Network Scanner</string>
 
     <string name="starting_scan">Starting scan</string>
-    <string name="wifi_not_enabled">Wifi doesn\'t seem enabled. Please enable it and refresh.</string>
+    <string name="wifi_not_enabled">Please enable Wi-Fi</string>
+    <string name="wifi_not_connected">Please connect to an access point</string>
 </resources>

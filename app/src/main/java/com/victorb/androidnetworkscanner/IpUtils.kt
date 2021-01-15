@@ -30,6 +30,15 @@ fun intIpToString(ip: Int) = String.format(
         (ip shr 24 and 0xff)
 )
 
+fun intReversedIpToString(ip: Int) = String.format(
+        "%d.%d.%d.%d",
+        (ip shr 24 and 0xff),
+        (ip shr 16 and 0xff),
+        (ip shr 8 and 0xff),
+        (ip and 0xff)
+
+)
+
 /**
  * Converts the IP to a four-byte array
  * For example 16909060 becomes [1, 2, 3, 4]

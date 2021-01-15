@@ -44,8 +44,8 @@ fun startScan(baseIp: Int,
             if (ipAsInetAddress.isReachable(checkTimeout)) {
 
                 // Define the hostname and the ip to add
-                val hostname: String = ipAsInetAddress.hostName
-                val ipAsString: String = intIpToString(ip)
+                val hostname: String = ipAsInetAddress.hostName.replace(".home", "")
+                val ipAsString: String = intReversedIpToString(ip)
 
                 // Add its hostname and IP to the recycler view
                 activity.runOnUiThread {
