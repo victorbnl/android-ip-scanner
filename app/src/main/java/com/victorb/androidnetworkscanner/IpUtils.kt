@@ -4,9 +4,12 @@ import java.net.InetAddress
 
 /**
  * Reverses the ip bytes to make calculations easier
- * UNUSED: Reserved for a future change in the algorithm
+ * For example 1.2.3.4 becomes 4.3.2.1
+ *
+ * @param ip The IP to reverse bytes
+ * @return The reversed IP as Int
  */
-fun reverseIpBytes(ip: Int): Int =
+fun intIpToReversedIntIp(ip: Int): Int =
         ((ip and 0xff) shl 24) +
                 (((ip shr 8) and 0xff) shl 16) +
                 (((ip shr 16) and 0xff) shl 8) +
@@ -14,8 +17,12 @@ fun reverseIpBytes(ip: Int): Int =
 
 /**
  * Converts the IP to a human-readable string
+ * For example 16909060 becomes 1.2.3.4
+ *
+ * @param ip The IP to convert
+ * @return The IP as String with 1.2.3.4 format
  */
-fun ipToString(ip: Int) = String.format(
+fun intIpToString(ip: Int) = String.format(
         "%d.%d.%d.%d",
         (ip and 0xff),
         (ip shr 8 and 0xff),
@@ -25,8 +32,12 @@ fun ipToString(ip: Int) = String.format(
 
 /**
  * Converts the IP to a four-byte array
+ * For example 16909060 becomes [1, 2, 3, 4]
+ *
+ * @param ip The IP to convert
+ * @return The ByteArray containing each byte of the IP
  */
-fun ipToBytes(ip: Int): ByteArray = arrayOf(
+fun intIpToByteArray(ip: Int): ByteArray = arrayOf(
         (ip and 0xff).toByte(),
         (ip shr 8 and 0xff).toByte(),
         (ip shr 16 and 0xff).toByte(),
@@ -35,8 +46,12 @@ fun ipToBytes(ip: Int): ByteArray = arrayOf(
 
 /**
  * Reverse the IP and converts it to an array of bytes at the same time
+ * For example 16909060 becomes [4, 3, 2, 1]
+ *
+ * @param ip The IP to convert
+ * @return The reversed ByteArray containing each byte of the IP
  */
-fun ipToReversedBytes(ip: Int): ByteArray = arrayOf(
+fun intIpToReversedByteArray(ip: Int): ByteArray = arrayOf(
         (ip shr 24 and 0xff).toByte(),
         (ip shr 16 and 0xff).toByte(),
         (ip shr 8 and 0xff).toByte(),
@@ -44,14 +59,10 @@ fun ipToReversedBytes(ip: Int): ByteArray = arrayOf(
 ).toByteArray()
 
 /**
- * Converts an IP to a InetAddress object.
- * Used to makes requests on IP to check its reachability or get its hostname
+ * Reverses the IP and converts it to a InetAddress object
+ * Used in the main for loop where IPs are reversed to make the requests
+ *
+ * @param ip The reversed IP to convert
+ * @return The InetAddress object from the IP
  */
-fun ipToInetAddress(ip: Int): InetAddress = InetAddress.getByAddress(ipToBytes(ip))
-
-/**
- * Converts a reversed IP to a InetAddress object
- * Used in the main for loop where IPs are reversed to be able to check if it's reachable and get
- * its hostname
- */
-fun reversedIpToInetAddress(ip: Int): InetAddress = InetAddress.getByAddress(ipToReversedBytes(ip))
+fun reversedIntIpToInetAddress(ip: Int): InetAddress = InetAddress.getByAddress(intIpToReversedByteArray(ip))
