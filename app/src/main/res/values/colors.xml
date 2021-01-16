@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="statusBar">#1565C0</color>
     <color name="toolbarForeground">#FFFFFFFF</color>
     <color name="toolbarBackground">#2196F3</color>
+    <color name="toolbarBackgroundDark">#1565C0</color>
 </resources>
