@@ -3,27 +3,29 @@ package com.victorb.androidnetworkscanner
 import android.app.Activity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.net.InetAddress
 
 /**
  * Starts a scan
  *
+ * @param scanScope The scope in which run all the coroutines
  * @param baseIp The base IP to start from, can be any IP on the network
  * @param networkPrefixLength The network prefix length to know which IPs to test
  * @param checkTimeout The timeout of the ping request
  * @param resultsAdapter The adapter in which add the results. Must have a addItem(String, String)
- * function
+ *                       function
  * @param activity Used to run on the UI thread. I'll try to change the algorithm not to need this
- * then
+ *                 then
  */
 fun startScan(baseIp: Int,
               networkPrefixLength: Int,
               checkTimeout: Int,
               resultsAdapter: ResultsAdapter,
-              activity: Activity) {
+              activity: Activity): CoroutineScope {
     // Create the scope for all the coroutines
-    val checkJobsScope = CoroutineScope(Dispatchers.IO)
+    val scanScope = CoroutineScope(Dispatchers.IO)
 
     // Reverse the bytes to make operations easier
     val ip: Int = intIpToReversedIntIp(baseIp)
@@ -36,7 +38,7 @@ fun startScan(baseIp: Int,
     for (ip in lowestIp..highestIp) {
 
         // Start the scan job
-        checkJobsScope.launch {
+        scanScope.launch {
             // Convert it to an InetAddress object
             val ipAsInetAddress: InetAddress = reversedIntIpToInetAddress(ip)
 
@@ -54,6 +56,8 @@ fun startScan(baseIp: Int,
             }
         }
     }
+
+    return scanScope
 }
 
 /**

@@ -75,3 +75,9 @@ fun intIpToReversedByteArray(ip: Int): ByteArray = arrayOf(
  * @return The InetAddress object from the IP
  */
 fun reversedIntIpToInetAddress(ip: Int): InetAddress = InetAddress.getByAddress(intIpToReversedByteArray(ip))
+
+fun generateIpRange(ip: Int, networkPrefixLength: Int): IntRange {
+    val lowestIp: Int = ip and (((1 shl networkPrefixLength) - 1) shl (32 - networkPrefixLength))
+    val highestIp: Int = lowestIp + ((1 shl (32 - networkPrefixLength)) - 1)
+    return lowestIp..highestIp
+}

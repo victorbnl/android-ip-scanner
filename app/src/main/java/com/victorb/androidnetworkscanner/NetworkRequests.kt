@@ -26,7 +26,7 @@ fun getConnectivityManager(context: Context): ConnectivityManager =
  * @param context The context used to get the WifiManager. Must be an application context
  * @return Whether Wifi is enabled or not, as a Boolean
  */
-fun checkWiFiEnabled(context: Context): Boolean =
+fun isWifiEnabled(context: Context): Boolean =
         getWifiManager(context).isWifiEnabled
 
 /**
@@ -35,7 +35,7 @@ fun checkWiFiEnabled(context: Context): Boolean =
  *
  * @param context The context used to get the WifiManager. Must be an application context
  */
-fun checkWifiConnected(context: Context): Boolean =
+fun isWifiConnected(context: Context): Boolean =
     true
 
 /**

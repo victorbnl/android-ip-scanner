@@ -1,16 +1,19 @@
 package com.victorb.androidnetworkscanner
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.*
 import java.net.InetAddress
 
 class MainActivity : AppCompatActivity() {
     private var resultsAdapter = ResultsAdapter()
+    private lateinit var scanningJob: Job
 
     /**
      * The main function
@@ -30,18 +33,36 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        // Get the network prefix length
-        val networkPrefixLength: Int = getNetworkPrefixLength(this)
+        scanningJob = startScan(this, this, resultsAdapter)
+    }
 
-        // Check if Wifi is enabled and connected and starts the scan
-        if (checkWiFiEnabled(this)) {
-            if (checkWifiConnected(this)) {
-                startScan(getPhoneIp(this.applicationContext), networkPrefixLength, 2000, resultsAdapter, this)
+    private fun startScan(context: Context, activity: Activity, adapter: ResultsAdapter): Job {
+        return CoroutineScope(Dispatchers.Default).launch {
+            if (isWifiEnabled(context)) {
+                if (isWifiConnected(context)) {
+                    val ip: Int = getPhoneIp(context)
+                    val networkPrefixLength: Int = getNetworkPrefixLength(context)
+                    val checkScope = CoroutineScope(Dispatchers.Default)
+                    val reversedIp: Int = intIpToReversedIntIp(ip)
+                    for (ipToTest in generateIpRange(reversedIp, networkPrefixLength)) {
+                        val reversedIpToTest: Int = intIpToReversedIntIp(ipToTest)
+                        checkScope.launch {
+                            val ipToTestAsInetAddress = InetAddress.getByAddress(intIpToByteArray(reversedIpToTest))
+                            if (ipToTestAsInetAddress.isReachable(2000)) {
+                                val hostname: String = ipToTestAsInetAddress.hostName.replace(".home", "")
+                                val ipAsString: String = intIpToString(reversedIpToTest)
+                                activity.runOnUiThread {
+                                    adapter.addItem(ipAsString, hostname)
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    wifiNotConnectedMessage(context)
+                }
             } else {
-                Toast.makeText(this, R.string.wifi_not_connected, Toast.LENGTH_LONG).show()
+                wifiNotEnabledMessage(context)
             }
-        } else {
-            Toast.makeText(this, R.string.wifi_not_enabled, Toast.LENGTH_LONG).show()
         }
     }
 
@@ -53,7 +74,10 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // When refresh menu button clicked
             R.id.action_refresh -> {
-                // TODO: Refresh button
+                refreshingMessage(this)
+                scanningJob.cancel()
+                resultsAdapter.clearList()
+                scanningJob = startScan(this, this, resultsAdapter)
             }
         }
         return super.onOptionsItemSelected(item)
