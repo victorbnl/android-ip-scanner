@@ -49,8 +49,9 @@ class MainActivity : AppCompatActivity() {
                         checkScope.launch {
                             val ipToTestAsInetAddress = InetAddress.getByAddress(intIpToByteArray(reversedIpToTest))
                             if (ipToTestAsInetAddress.isReachable(2000)) {
-                                val hostname: String = ipToTestAsInetAddress.hostName.replace(".home", "")
                                 val ipAsString: String = intIpToString(reversedIpToTest)
+                                val gotHostname: String = ipToTestAsInetAddress.hostName
+                                val hostname: String = if (gotHostname != ipAsString) gotHostname.replace(".home", "") else getString(R.string.unknown_device)
                                 activity.runOnUiThread {
                                     adapter.addItem(ipAsString, hostname)
                                 }
