@@ -43,14 +43,19 @@ jobs:
       - name: Assemble release
         run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
         
+      - name: Get version
+        run: |
+          echo ::set-env name=VERSION_CODE::$(grep -oP 'versionCode \K[0-9]+' ./app/build.gradle)
+          echo ::set-env name=VERSION_NAME::$(grep -oP 'versionName "\K[0-9]+' ./app/build.gradle)
+        
       - name: Create GitHub release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
+          tag_name: ${{ env.VERSION_CODE }}
+          release_name: Release ${{ env.VERSION_NAME }}
       
       - name: Upload APK to the release
         uses: actions/upload-release-asset@v1
