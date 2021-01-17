@@ -1,0 +1,2 @@
+A bare-bone IP scanner that displays only the IPs ands hostnames et no others informations like the open ports or services
+Un semplice scanner di IP che mostra gli IP e i nomi host, e non altre informazioni come i port aperti o servizi
