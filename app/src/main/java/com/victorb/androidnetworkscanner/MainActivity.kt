@@ -1,11 +1,13 @@
 package com.victorb.androidnetworkscanner
 
+import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -35,11 +37,17 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
+        //toolbar.findViewById<Button>(R.id.action_refresh).rotation = 90f
+
+        /*ObjectAnimator.ofFloat(toolbar.findViewById<Button>(R.id.action_refresh), "rotationY", 100f).apply {
+            start()
+        }*/
+
         scanningJob = startScan(this, this, findViewById(R.id.progress_bar), resultsAdapter)
     }
 
     private fun startScan(context: Context, activity: Activity, progressBar: ProgressBar, adapter: ResultsAdapter): Job =
-            CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.IO).launch {
             if (isWifiEnabled(context)) {
                 if (isWifiConnected(context)) {
                     val networkPrefixLength: Int = getNetworkPrefixLength(context)
@@ -92,7 +100,8 @@ class MainActivity : AppCompatActivity() {
                 val context: Context = this
                 val activity: Activity = this
                 CoroutineScope(Dispatchers.Default).launch {
-                    if (scanningJob.isActive) scanningJob.cancelAndJoin()
+                    scanningJob.cancelAndJoin()
+                    println("Refresh")
                     activity.runOnUiThread {
                         resultsAdapter.clearList()
                     }
@@ -109,6 +118,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Set the menu (actually the refresh button)
         menuInflater.inflate(R.menu.menu, menu)
+        menu?.findItem(R.id.action_refresh)?.actionView?.rotation = 90f
         return true
     }
 }
