@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                 if (isWifiConnected(context)) {
                     val ip: Int = getPhoneIp(context)
                     val networkPrefixLength: Int = getNetworkPrefixLength(context)
-                    val checkScope = CoroutineScope(Dispatchers.Default)
+                    val checkScope = CoroutineScope(Dispatchers.IO)
                     val reversedIp: Int = intIpToReversedIntIp(ip)
                     for (ipToTest in generateIpRange(reversedIp, networkPrefixLength)) {
                         val reversedIpToTest: Int = intIpToReversedIntIp(ipToTest)
