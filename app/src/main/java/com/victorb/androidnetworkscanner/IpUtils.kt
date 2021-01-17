@@ -36,7 +36,6 @@ fun intReversedIpToString(ip: Int) = String.format(
         (ip shr 16 and 0xff),
         (ip shr 8 and 0xff),
         (ip and 0xff)
-
 )
 
 /**

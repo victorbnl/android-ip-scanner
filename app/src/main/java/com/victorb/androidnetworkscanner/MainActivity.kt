@@ -75,10 +75,16 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // When refresh menu button clicked
             R.id.action_refresh -> {
-                refreshingMessage(this)
-                scanningJob.cancel()
-                resultsAdapter.clearList()
-                scanningJob = startScan(this, this, resultsAdapter)
+                val refreshScope = CoroutineScope(Dispatchers.IO)
+                val context: Context = this
+                val activity: Activity = this
+                refreshScope.launch {
+                    scanningJob.cancel()
+                    activity.runOnUiThread {
+                        resultsAdapter.clearList()
+                    }
+                    scanningJob = startScan(context, activity, resultsAdapter)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
