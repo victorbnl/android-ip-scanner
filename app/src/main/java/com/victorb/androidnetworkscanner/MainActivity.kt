@@ -5,6 +5,8 @@ import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -33,21 +35,29 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        scanningJob = startScan(this, this, resultsAdapter)
+        (findViewById<ProgressBar>(R.id.progress_bar) as ProgressBar)
+
+        scanningJob = startScan(this, this, findViewById(R.id.progress_bar), resultsAdapter)
     }
 
-    private fun startScan(context: Context, activity: Activity, adapter: ResultsAdapter): Job {
-        return CoroutineScope(Dispatchers.Default).launch {
+    private fun startScan(context: Context, activity: Activity, progressBar: ProgressBar, adapter: ResultsAdapter): Job =
+            CoroutineScope(Dispatchers.Default).launch {
             if (isWifiEnabled(context)) {
                 if (isWifiConnected(context)) {
-                    val ip: Int = getPhoneIp(context)
                     val networkPrefixLength: Int = getNetworkPrefixLength(context)
-                    val checkScope = CoroutineScope(Dispatchers.IO)
-                    val reversedIp: Int = intIpToReversedIntIp(ip)
-                    for (ipToTest in generateIpRange(reversedIp, networkPrefixLength)) {
+                    val reversedIp: Int = intIpToReversedIntIp(getPhoneIp(context))
+                    val ipRange: IntRange = generateIpRange(reversedIp, networkPrefixLength)
+                    val jobs: ArrayList<Job> = arrayListOf()
+                    activity.runOnUiThread {
+                        progressBar.progress = 0
+                        progressBar.max = ipRange.count()
+                        progressBar.visibility = View.VISIBLE
+                    }
+                    for (ipToTest in ipRange) {
                         val reversedIpToTest: Int = intIpToReversedIntIp(ipToTest)
-                        checkScope.launch {
+                        jobs.add(CoroutineScope(Dispatchers.IO).launch {
                             val ipToTestAsInetAddress = InetAddress.getByAddress(intIpToByteArray(reversedIpToTest))
+                            println("Testing " + intReversedIpToString(ipToTest))
                             if (ipToTestAsInetAddress.isReachable(2000)) {
                                 val ipAsString: String = intIpToString(reversedIpToTest)
                                 val gotHostname: String = ipToTestAsInetAddress.hostName
@@ -56,7 +66,14 @@ class MainActivity : AppCompatActivity() {
                                     adapter.addItem(ipAsString, hostname)
                                 }
                             }
-                        }
+                            activity.runOnUiThread {
+                                progressBar.progress = progressBar.progress + 1
+                            }
+                        })
+                    }
+                    jobs.joinAll()
+                    activity.runOnUiThread {
+                        progressBar.visibility = View.GONE
                     }
                 } else {
                     wifiNotConnectedMessage(context)
@@ -64,7 +81,6 @@ class MainActivity : AppCompatActivity() {
             } else {
                 wifiNotEnabledMessage(context)
             }
-        }
     }
 
     /**
@@ -75,15 +91,14 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             // When refresh menu button clicked
             R.id.action_refresh -> {
-                val refreshScope = CoroutineScope(Dispatchers.IO)
                 val context: Context = this
                 val activity: Activity = this
-                refreshScope.launch {
-                    scanningJob.cancel()
+                CoroutineScope(Dispatchers.Default).launch {
+                    if (scanningJob.isActive) scanningJob.cancelAndJoin()
                     activity.runOnUiThread {
                         resultsAdapter.clearList()
                     }
-                    scanningJob = startScan(context, activity, resultsAdapter)
+                    scanningJob = startScan(context, activity, findViewById(R.id.progress_bar), resultsAdapter)
                 }
             }
         }

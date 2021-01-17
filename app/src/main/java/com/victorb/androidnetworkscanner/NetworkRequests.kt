@@ -17,9 +17,6 @@ import java.net.NetworkInterface
 fun getWifiManager(context: Context): WifiManager =
         context.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
-fun getConnectivityManager(context: Context): ConnectivityManager =
-        context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
 /**
  * Check if WiFi is enabled
  *
