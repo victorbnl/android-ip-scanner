@@ -35,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        (findViewById<ProgressBar>(R.id.progress_bar) as ProgressBar)
-
         scanningJob = startScan(this, this, findViewById(R.id.progress_bar), resultsAdapter)
     }
 
