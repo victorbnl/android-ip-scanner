@@ -1,1 +1,1 @@
-a bare-bone network scanner
+A bare-bone network scanner

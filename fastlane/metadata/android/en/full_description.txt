@@ -1,3 +1,1 @@
-Do you sometimes just look for an IP address but don't want to see a ton of informations on the device so you don't know what to choose with all these heavy network scanner like Fing or PortAuthority? Well, that's why I made this app.
-
-<i>Android Network Scanner</i> is just a lightweight bare-bone Android network scanner.
+A bare-bone IP scanner that displays only the IPs ands hostnames et no others informations like the open ports or services
