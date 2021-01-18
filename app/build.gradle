@@ -11,8 +11,8 @@ android {
         applicationId "com.victorb.androidnetworkscanner"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 18
-        versionName "18"
+        versionCode 19
+        versionName "19"
     }
 
     buildTypes {
@@ -20,7 +20,6 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt')
             shrinkResources true
-            resConfigs "en"
         }
     }
     compileOptions {
