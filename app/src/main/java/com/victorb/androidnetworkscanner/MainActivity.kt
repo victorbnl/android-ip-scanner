@@ -7,9 +7,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.animation.doOnCancel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.*
@@ -18,6 +21,7 @@ import java.net.InetAddress
 class MainActivity : AppCompatActivity() {
     private var resultsAdapter = ResultsAdapter()
     private lateinit var scanningJob: Job
+    private lateinit var menu: Menu
 
     /**
      * The main function
@@ -37,16 +41,10 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this);
         recyclerView.adapter = resultsAdapter
 
-        //toolbar.findViewById<Button>(R.id.action_refresh).rotation = 90f
-
-        /*ObjectAnimator.ofFloat(toolbar.findViewById<Button>(R.id.action_refresh), "rotationY", 100f).apply {
-            start()
-        }*/
-
-        scanningJob = startScan(this, this, findViewById(R.id.progress_bar), resultsAdapter)
+        scanningJob = startScan(this, this, null, resultsAdapter)
     }
 
-    private fun startScan(context: Context, activity: Activity, progressBar: ProgressBar, adapter: ResultsAdapter): Job =
+    private fun startScan(context: Context, activity: Activity, viewToRotate: View?, adapter: ResultsAdapter): Job =
             CoroutineScope(Dispatchers.IO).launch {
             if (isWifiEnabled(context)) {
                 if (isWifiConnected(context)) {
@@ -54,10 +52,17 @@ class MainActivity : AppCompatActivity() {
                     val reversedIp: Int = intIpToReversedIntIp(getPhoneIp(context))
                     val ipRange: IntRange = generateIpRange(reversedIp, networkPrefixLength)
                     val jobs: ArrayList<Job> = arrayListOf()
+                    val animator: ObjectAnimator = ObjectAnimator.ofFloat(viewToRotate, "rotation", 360f).apply {
+                        duration = 1000
+                        repeatCount = Animation.INFINITE
+                        interpolator = LinearInterpolator()
+                        doOnCancel {
+                            viewToRotate?.rotation = 0f
+                        }
+
+                    }
                     activity.runOnUiThread {
-                        progressBar.progress = 0
-                        progressBar.max = ipRange.count()
-                        progressBar.visibility = View.VISIBLE
+                        animator.start()
                     }
                     for (ipToTest in ipRange) {
                         val reversedIpToTest: Int = intIpToReversedIntIp(ipToTest)
@@ -72,14 +77,11 @@ class MainActivity : AppCompatActivity() {
                                     adapter.addItem(ipAsString, hostname)
                                 }
                             }
-                            activity.runOnUiThread {
-                                progressBar.progress = progressBar.progress + 1
-                            }
                         })
                     }
                     jobs.joinAll()
                     activity.runOnUiThread {
-                        progressBar.visibility = View.GONE
+                        animator.cancel()
                     }
                 } else {
                     wifiNotConnectedMessage(context)
@@ -105,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     activity.runOnUiThread {
                         resultsAdapter.clearList()
                     }
-                    scanningJob = startScan(context, activity, findViewById(R.id.progress_bar), resultsAdapter)
+                    scanningJob = startScan(context, activity, findViewById(R.id.action_refresh), resultsAdapter)
                 }
             }
         }
@@ -118,7 +120,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // Set the menu (actually the refresh button)
         menuInflater.inflate(R.menu.menu, menu)
-        menu?.findItem(R.id.action_refresh)?.actionView?.rotation = 90f
         return true
     }
 }

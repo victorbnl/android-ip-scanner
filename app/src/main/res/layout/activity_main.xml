@@ -25,16 +25,6 @@
             app:title="@string/app_name"
             app:titleTextColor="@color/toolbarForeground" />
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:max="100"
-            android:progress="50"
-            android:progressDrawable="@drawable/progress_bar"
-            android:visibility="visible" />
-
 
     </com.google.android.material.appbar.AppBarLayout>
 
