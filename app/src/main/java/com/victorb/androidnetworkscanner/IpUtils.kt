@@ -1,7 +1,5 @@
 package com.victorb.androidnetworkscanner
 
-import java.net.InetAddress
-
 /**
  * Reverses the ip bytes to make calculations easier
  * For example 1.2.3.4 becomes 4.3.2.1
@@ -51,29 +49,6 @@ fun intIpToByteArray(ip: Int): ByteArray = arrayOf(
         (ip shr 16 and 0xff).toByte(),
         (ip shr 24 and 0xff).toByte()
 ).toByteArray()
-
-/**
- * Reverse the IP and converts it to an array of bytes at the same time
- * For example 16909060 becomes [4, 3, 2, 1]
- *
- * @param ip The IP to convert
- * @return The reversed ByteArray containing each byte of the IP
- */
-fun intIpToReversedByteArray(ip: Int): ByteArray = arrayOf(
-        (ip shr 24 and 0xff).toByte(),
-        (ip shr 16 and 0xff).toByte(),
-        (ip shr 8 and 0xff).toByte(),
-        (ip and 0xff).toByte()
-).toByteArray()
-
-/**
- * Reverses the IP and converts it to a InetAddress object
- * Used in the main for loop where IPs are reversed to make the requests
- *
- * @param ip The reversed IP to convert
- * @return The InetAddress object from the IP
- */
-fun reversedIntIpToInetAddress(ip: Int): InetAddress = InetAddress.getByAddress(intIpToReversedByteArray(ip))
 
 fun generateIpRange(ip: Int, networkPrefixLength: Int): IntRange {
     val lowestIp: Int = ip and (((1 shl networkPrefixLength) - 1) shl (32 - networkPrefixLength))

@@ -10,32 +10,6 @@ import java.net.InterfaceAddress
 import java.net.NetworkInterface
 
 /**
- * Get the Wifi Manager service
- *
- * @param context The application context
- */
-fun getWifiManager(context: Context): WifiManager =
-        context.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
-/**
- * Check if WiFi is enabled
- *
- * @param context The context used to get the WifiManager. Must be an application context
- * @return Whether Wifi is enabled or not, as a Boolean
- */
-fun isWifiEnabled(context: Context): Boolean =
-        getWifiManager(context).isWifiEnabled
-
-/**
- * Check if Wifi is connected
- * TODO: Find a way to check if WiFi is connected
- *
- * @param context The context used to get the WifiManager. Must be an application context
- */
-fun isWifiConnected(context: Context): Boolean =
-    true
-
-/**
  * Get the phone IP
  *
  * @param context The context used to get the WifiManager. Must be an application context
