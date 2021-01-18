@@ -1,1 +1,0 @@
-Un simple scanneur d'IP n'affichant que les IPs et les noms d'hôte et pas d'autres informations telles que les ports ouverts ou les services
