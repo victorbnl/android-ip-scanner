@@ -3,6 +3,7 @@ package com.victorb.androidnetworkscanner
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
 import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnCancel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,7 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun startScan(context: Context, activity: Activity, viewToRotate: View?, adapter: ResultsAdapter): Job =
             CoroutineScope(Dispatchers.IO).launch {
-            if (isWifiEnabled(context)) {
+            if ((getSystemService(WIFI_SERVICE) as WifiManager).isWifiEnabled) {
                 if (isWifiConnected(context)) {
                     val networkPrefixLength: Int = getNetworkPrefixLength(context)
                     val reversedIp: Int = intIpToReversedIntIp(getPhoneIp(context))
@@ -84,10 +86,14 @@ class MainActivity : AppCompatActivity() {
                         animator.cancel()
                     }
                 } else {
-                    wifiNotConnectedMessage(context)
+                    activity.runOnUiThread {
+                        Toast.makeText(context, R.string.wifi_not_connected, Toast.LENGTH_LONG).show()
+                    }
                 }
             } else {
-                wifiNotEnabledMessage(context)
+                activity.runOnUiThread {
+                    Toast.makeText(context, R.string.wifi_not_enabled, Toast.LENGTH_LONG).show()
+                }
             }
     }
 
