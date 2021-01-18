@@ -7,4 +7,4 @@ Do you sometimes just look for an IP address but don't want to see a ton of info
 
 ## Screenshots
 
-<img src=".readme/screen_light.jpg" height="500px"> <img src=".readme/screen_dark.jpg" height="500px">
+<img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500px"> <img src="./fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500px">
