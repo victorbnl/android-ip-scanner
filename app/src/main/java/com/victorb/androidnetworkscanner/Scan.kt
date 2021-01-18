@@ -40,7 +40,7 @@ CoroutineScope(Dispatchers.IO).launch {
                     if (ipToTestAsInetAddress.isReachable(2000)) {
                         val ipAsString: String = intIpToString(reversedIpToTest)
                         val gotHostname: String = ipToTestAsInetAddress.hostName
-                        val hostname: String = if (gotHostname != ipAsString) gotHostname.replace(".home", "") else context.getString(R.string.unknown_device)
+                        val hostname: String = if (gotHostname != ipAsString) gotHostname.replace(".home", "") else "Unknown device"
                         activity.runOnUiThread {
                             adapter.addItem(ipAsString, hostname)
                         }
@@ -53,12 +53,12 @@ CoroutineScope(Dispatchers.IO).launch {
             }
         } else {
             activity.runOnUiThread {
-                Toast.makeText(context, R.string.wifi_not_connected, Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Please connect to an access point", Toast.LENGTH_LONG).show()
             }
         }
     } else {
         activity.runOnUiThread {
-            Toast.makeText(context, R.string.wifi_not_enabled, Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Please enable Wi-Fi", Toast.LENGTH_LONG).show()
         }
     }
 }

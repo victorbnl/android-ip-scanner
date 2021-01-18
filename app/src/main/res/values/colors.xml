@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="toolbarForeground">#FFFFFFFF</color>
     <color name="accent">#2196F3</color>
-    <color name="accentDark">#1565C0</color>
-    <color name="progressForeground">#1565C0</color>
-    <color name="progressBackground">#0D47A1</color>
 </resources>

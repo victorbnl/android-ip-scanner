@@ -22,8 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/accent"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/toolbarForeground" />
+            app:title="Android IP Scanner" />
 
 
     </com.google.android.material.appbar.AppBarLayout>
