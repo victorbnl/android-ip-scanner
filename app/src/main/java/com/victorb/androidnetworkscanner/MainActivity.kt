@@ -55,9 +55,7 @@ class MainActivity : AppCompatActivity() {
             R.id.action_refresh -> {
                 val context: Context = this
                 val activity: Activity = this
-                CoroutineScope(Dispatchers.Default).launch {
-                    scanningJob.cancelAndJoin()
-                    println("Refresh")
+                if (!scanningJob.isActive) {
                     activity.runOnUiThread {
                         resultsAdapter.clearList()
                     }

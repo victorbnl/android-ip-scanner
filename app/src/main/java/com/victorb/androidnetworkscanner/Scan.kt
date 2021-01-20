@@ -3,6 +3,7 @@ package com.victorb.androidnetworkscanner
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.content.Context
+import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
 import android.view.View
 import android.view.animation.Animation
@@ -16,7 +17,7 @@ import java.net.InetAddress
 fun startScan(context: Context, activity: Activity, viewToRotate: View?, adapter: ResultsAdapter): Job =
 CoroutineScope(Dispatchers.IO).launch {
     if ((context.applicationContext.getSystemService(AppCompatActivity.WIFI_SERVICE) as WifiManager).isWifiEnabled) {
-        if (true) { // TODO: Check if device is connected
+        if ((context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetwork != null) { // TODO: Check if device is connected
             val networkPrefixLength: Int = getNetworkPrefixLength(context)
             val reversedIp: Int = intIpToReversedIntIp(getPhoneIp(context))
             val ipRange: IntRange = generateIpRange(reversedIp, networkPrefixLength)
