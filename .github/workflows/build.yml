@@ -2,29 +2,30 @@
 
 name: Release APK
 
-# Controls when the action will run. 
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+
       - name: Checkout repository
         uses: actions/checkout@v2
+        
+      - name: Set version to release number
+        run: |
+          sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/g" ./app/build.gradle
+          sed -i "s/versionName \"[0-9]*\"/versionName \"$n\"/g" ./app/build.gradle
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Increase version"
+          git push
 
       - name: Setup Java JDK
         uses: actions/setup-java@v1.4.3
@@ -41,7 +42,11 @@ jobs:
         run: ./gradlew build
         
       - name: Assemble release
-        run: ./gradlew assembleRelease -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease 
+          -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks 
+          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} 
+          -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} 
+          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
         
       - name: Get version
         id: version
@@ -55,8 +60,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.version.outputs.VERSION_CODE }}
-          release_name: Release ${{ steps.version.outputs.VERSION_NAME }}
+          tag_name: ${{ github.run_number }}
+          release_name: Release ${{ github.run_number }}
       
       - name: Upload APK to the release
         uses: actions/upload-release-asset@v1
