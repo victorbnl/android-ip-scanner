@@ -30,10 +30,10 @@ jobs:
       - name: Build Signed APK
         uses: Victor-Bo/build-signed-apk@v5
         with:
-          keystore: "x"
-          keystore_password: "d"
-          key_alias: "t"
-          key_password: "w"
+          keystore: ${{ secrets.KEYSTORE_FILE }}
+          keystore_password: ${{ secrets.KEYSTORE_PASSWORD }}
+          key_alias: ${{ KEY_ALIAS }}
+          key_password: ${{ KEY_PASSWORD }}
         
       - name: Create GitHub release
         id: create_release
