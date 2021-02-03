@@ -27,32 +27,13 @@ jobs:
           git commit -m "Increase version"
           git push
 
-      - name: Setup Java JDK
-        uses: actions/setup-java@v1.4.3
+      - name: Build Signed APK
+        uses: Victor-Bo/build-signed-apk@v1
         with:
-          java-version: 1.8
-          
-      - name: Write the keystore file
-        run: echo "${{ secrets.KEYSTORE_FILE }}" | base64 -d > signing-key.jks
-      
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-      
-      - name: Build the app
-        run: ./gradlew build
-        
-      - name: Assemble release
-        run: ./gradlew assembleRelease 
-          -Pandroid.injected.signing.store.file=${{ github.workspace }}/signing-key.jks 
-          -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} 
-          -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} 
-          -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
-        
-      - name: Get version
-        id: version
-        run: |
-          echo "::set-output name=VERSION_CODE::$(grep -oP 'versionCode \K[0-9]+' ./app/build.gradle)"
-          echo "::set-output name=VERSION_NAME::$(grep -oP 'versionName "\K[0-9]+' ./app/build.gradle)"
+          keystore: ${{ secrets.KEYSTORE_FILE }}
+          keystore_password: ${{ secrets.KEYSTORE_PASSWORD }}
+          key_alias: ${{ secrets.KEY_ALIAS }}
+          key_password: ${{ secrets.KEY_PASSWORD }}
         
       - name: Create GitHub release
         id: create_release
