@@ -28,7 +28,7 @@ jobs:
           git push
 
       - name: Build Signed APK
-        uses: Victor-Bo/build-signed-apk@v1
+        uses: Victor-Bo/build-signed-apk@v2
         with:
           keystore: "x"
           keystore_password: "d"
