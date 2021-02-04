@@ -28,7 +28,7 @@ jobs:
           git push
 
       - name: Build Signed APK
-        uses: Victor-Bo/build-signed-apk@v5
+        uses: Victor-Bo/build-signed-apk@v7
         with:
           keystore: ${{ secrets.KEYSTORE_FILE }}
           keystore_password: ${{ secrets.KEYSTORE_PASSWORD }}
