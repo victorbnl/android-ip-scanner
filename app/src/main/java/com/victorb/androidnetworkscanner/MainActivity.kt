@@ -65,7 +65,6 @@ class MainActivity : AppCompatActivity() {
             // When refresh menu button clicked
             R.id.action_refresh -> {
                 resultsAdapter.clear()
-                if (currentScanJob == null || currentScanJob?.isActive == false)
                 currentScanJob = startScan(this)
             }
         }
