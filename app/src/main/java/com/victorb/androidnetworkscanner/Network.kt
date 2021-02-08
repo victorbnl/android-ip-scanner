@@ -9,20 +9,20 @@ import java.net.InetAddress
 import java.net.InterfaceAddress
 import java.net.NetworkInterface
 
+fun isWifiEnabled(context: Context): Boolean =
+    (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled
+
+fun isPhoneConnected(context: Context): Boolean =
+    (context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetwork != null
+
 /**
  * Get the phone IP
- *
- * @param context The context used to get the WifiManager. Must be an application context
- * @return The phone IP as an Int
  */
 fun getPhoneIp(context: Context): Int =
         (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).dhcpInfo.ipAddress
 
 /**
  * Get the network prefix length from the phone IP
- *
- * @param context The context used to get the WifiManager. Must be an application context
- * @return The network prefix length as Int
  */
 fun getNetworkPrefixLength(context: Context): Int {
     // IP object
@@ -41,3 +41,7 @@ fun getNetworkPrefixLength(context: Context): Int {
 
     return -1
 }
+
+fun getIpHostname(ip: Int): String = InetAddress.getByAddress(intIpToByteArray(ip)).hostName
+
+fun isIpReachable(ip: Int): Boolean = InetAddress.getByAddress(intIpToByteArray(ip)).isReachable(2000)

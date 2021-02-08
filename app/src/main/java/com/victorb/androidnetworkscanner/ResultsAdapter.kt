@@ -64,14 +64,18 @@ class ResultsAdapter() : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
      */
     fun addItem(hostname: String, ip: String) {
         dataSet.add(Device(hostname, ip))
-        notifyItemInserted(dataSet.size)
+        runOnMainThread {
+            notifyItemInserted(dataSet.size)
+        }
     }
 
     /**
      * Clears the list, for refreshing for example
      */
-    fun clearList() {
+    fun clear() {
         dataSet.clear()
-        notifyDataSetChanged()
+        runOnMainThread {
+            notifyDataSetChanged()
+        }
     }
 }
