@@ -10,6 +10,10 @@
 
 - The bad description in the README
 
+### Changed
+
+- Reorganize scan code
+
 ## [1.0.0] - 2021-02-08
 
 ### Added
