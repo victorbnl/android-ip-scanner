@@ -2,13 +2,13 @@
 
 ## [Unreleased]
 
-## [1.1.1] - 2021-02-08
+## [1.1.1](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.1.1) - 2021-02-08
 
 ### Changed
 
 - Fixed version code
 
-## [1.1.0] - 2021-02-08
+## [1.1.0](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.1.0) - 2021-02-08
 
 ### Added
 
@@ -23,7 +23,7 @@
 
 - Reorganize scan code
 
-## [1.0.0] - 2021-02-08
+## [1.0.0](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.0.0) - 2021-02-08
 
 ### Added
 
