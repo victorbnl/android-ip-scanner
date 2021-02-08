@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- Launcher icon
+
 ## [1.1.1](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.1.1) - 2021-02-08
 
 ### Changed
