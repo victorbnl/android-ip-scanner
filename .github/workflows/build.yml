@@ -14,16 +14,6 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v2
-        
-      - name: Set version to release number
-        run: |
-          sed -i "s/versionCode [0-9]*/versionCode ${{ github.run_number }}/g" ./app/build.gradle
-          sed -i "s/versionName \"[0-9]*\"/versionName \"${{ github.run_number }}\"/g" ./app/build.gradle
-          git config user.name github-actions
-          git config user.email github-actions@github.com
-          git add .
-          git commit -m "Increase version"
-          git push
 
       - name: Build Signed APK
         uses: victorbnl/build-signed-apk@main
@@ -32,22 +22,9 @@ jobs:
           keystore_password: ${{ secrets.KEYSTORE_PASSWORD }}
           key_alias: ${{ secrets.KEY_ALIAS }}
           key_password: ${{ secrets.KEY_PASSWORD }}
-        
-      - name: Create GitHub release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload the apk as artifact
+        uses: actions/upload-artifact@v2.2.2
         with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release ${{ github.run_number }}
-      
-      - name: Upload APK to the release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./app/build/outputs/apk/release/app-release.apk
-          asset_name: android-network-scanner.apk
-          asset_content_type: application/vnd.android.package-archive
+          name: APK
+          path: app/build/outputs/apk/release/app-release.apk
