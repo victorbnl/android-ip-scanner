@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.2.0](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.2.0) - 2021-02-08
 
 ### Added
 
