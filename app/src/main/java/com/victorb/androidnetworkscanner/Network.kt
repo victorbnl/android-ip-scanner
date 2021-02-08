@@ -15,15 +15,9 @@ fun isWifiEnabled(context: Context): Boolean =
 fun isPhoneConnected(context: Context): Boolean =
     (context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetwork != null
 
-/**
- * Get the phone IP
- */
 fun getPhoneIp(context: Context): Int =
         (context.getSystemService(Context.WIFI_SERVICE) as WifiManager).dhcpInfo.ipAddress
 
-/**
- * Get the network prefix length from the phone IP
- */
 fun getNetworkPrefixLength(context: Context): Int {
     // IP object
     val inetAddress: InetAddress = InetAddress.getByAddress(intIpToByteArray(getPhoneIp(context)));
