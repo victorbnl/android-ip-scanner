@@ -1,6 +1,5 @@
-<img src="./.readme/app_icon.png" align="right" width="200px">
+<img src="./.readme/app_icon.png" align="right" width="150px"><h1>Android IP Scanner</h1>
 
-# Android IP Scanner
 A bare-bone android IP scanner
 
 <a href="https://github.com/Victor-Bo/android-network-scanner/releases/latest"><img width="200px" src=".readme/get-it-on-github.svg"></a><a href="https://apt.izzysoft.de/fdroid/index/apk/com.victorb.androidnetworkscanner"><img width="200px" src=".readme/get-it-on-izzyondroid.png"></a>

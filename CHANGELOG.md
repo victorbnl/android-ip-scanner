@@ -1,10 +1,13 @@
 # Changelog
 
-## [Unreleased]
+## Unreleased
+
+## [1.2.0](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.2.0) - 2021-02-08
 
 ### Added
 
 - Launcher icon
+- Launcher icon in the README
 
 ## [1.1.1](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.1.1) - 2021-02-08
 
