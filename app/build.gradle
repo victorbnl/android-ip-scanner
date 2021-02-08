@@ -11,8 +11,8 @@ android {
         applicationId "com.victorb.androidnetworkscanner"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 89
-        versionName "89"
+        versionCode 90
+        versionName "90"
     }
 
     buildTypes {
