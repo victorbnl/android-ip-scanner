@@ -11,7 +11,7 @@ android {
         applicationId "com.victorb.androidnetworkscanner"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 001000001
+        versionCode 1000001
         versionName "1.0.1"
     }
 
