@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Launcher icon
+
 ## [1.3.0](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.3.0) - 2020-02-08
 
 ### Changed
