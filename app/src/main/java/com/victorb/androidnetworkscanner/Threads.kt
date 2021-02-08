@@ -12,6 +12,9 @@ fun runOnMainThread(callback: () -> Unit) {
     }
 }
 
+/**
+ * Runs the callback on the UI thread after delay miliseconds
+ */
 fun runOnMainThreadDelayed(delay: Long, callback: () -> Unit) {
     Handler(Looper.getMainLooper()).postDelayed({
         callback.invoke()

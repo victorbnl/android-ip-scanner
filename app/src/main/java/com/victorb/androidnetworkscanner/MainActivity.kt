@@ -1,6 +1,7 @@
 package com.victorb.androidnetworkscanner
 
 import android.animation.ObjectAnimator
+import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,14 +12,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnCancel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
+    // UI
     private var animator: ObjectAnimator? = null
-
     private var resultsAdapter = ResultsAdapter()
-    private lateinit var scanningJob: Job
-    private lateinit var scanner: Scanner
+
+    // Coroutines
+    private val scanJobScope = CoroutineScope(Dispatchers.Default)
+    private var currentScanJob: Job? = null
+    private val checkJobsScope = CoroutineScope(Dispatchers.IO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         // Default behaviour
@@ -38,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         // The delay is necessary to find the toolbar refresh button
         // See : https://stackoverflow.com/questions/28840815/menu-item-animation-rotate-indefinitely-its-custom-icon
         runOnMainThreadDelayed(100) {
+            // Create the animator
             val view = findViewById<View>(R.id.action_refresh)
             animator = ObjectAnimator.ofFloat(view, "rotation", 360f).apply {
                 duration = 1000
@@ -47,8 +52,9 @@ class MainActivity : AppCompatActivity() {
                     view.rotation = 0f
                 }
             }
-            scanner = Scanner(this, resultsAdapter, animator)
-            scanner.startScan()
+
+            // Start the scan
+            currentScanJob = startScan(this)
         }
     }
 
@@ -58,7 +64,8 @@ class MainActivity : AppCompatActivity() {
             // When refresh menu button clicked
             R.id.action_refresh -> {
                 resultsAdapter.clear()
-                scanner.startScan()
+                if (currentScanJob == null || currentScanJob?.isActive == false)
+                currentScanJob = startScan(this)
             }
         }
         return super.onOptionsItemSelected(item)
@@ -69,4 +76,22 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu, menu)
         return true
     }
+
+    private fun startScan(context: Context): Job =
+        scanJobScope.launch {
+            runOnMainThread { animator?.start() }
+            val checkingJobs: ArrayList<Job> = arrayListOf()
+            for (ip in generateIpRange(intIpToReversedIntIp(getPhoneIp(context)), getNetworkPrefixLength(context))) {
+                checkingJobs.add(checkJobsScope.launch {
+                    val reversedIp: Int = intIpToReversedIntIp(ip)
+                    if (isIpReachable(reversedIp)) {
+                        val hostname: String = getIpHostname(reversedIp)
+                        val ipString: String = intIpToString(reversedIp)
+                        resultsAdapter.addItem(ipString, hostname)
+                    }
+                })
+            }
+            checkingJobs.joinAll()
+            runOnMainThread { animator?.cancel() }
+        }
 }
