@@ -5,6 +5,7 @@
 ### Added
 
 - Made build.gradle match the version
+- Wifi enabled & connected check
 
 ### Removed
 
