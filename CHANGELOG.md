@@ -6,7 +6,7 @@
 
 - Made build.gradle match the version
 
-## [1.0.0] - 2020-02-08
+## [1.0.0] - 2021-02-08
 
 ### Added
 
