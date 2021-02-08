@@ -6,6 +6,10 @@
 
 - Made build.gradle match the version
 
+### Removed
+
+- The bad description in the README
+
 ## [1.0.0] - 2021-02-08
 
 ### Added
