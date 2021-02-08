@@ -1,6 +1,4 @@
-<img src="./.readme/app_icon.png" align="right" width="150px">
-
-# Android IP Scanner
+<img src="./.readme/app_icon.png" align="right" width="150px"><h1>Android IP Scanner</h1>
 
 A bare-bone android IP scanner
 
