@@ -20,8 +20,8 @@ class ResultsAdapter() : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
     /**
      * Sets the layout to use for one item
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-    = ViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_results,
                 parent,
     false)
@@ -38,8 +38,8 @@ class ResultsAdapter() : RecyclerView.Adapter<ResultsAdapter.ViewHolder>() {
     /**
      * Get item count
      */
-    override fun getItemCount()
-    = dataSet.size
+    override fun getItemCount() =
+        dataSet.size
 
     /**
      * Add an item to the dataset
