@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Added
+
+- Website
+
 ### Changed
 
 - Launcher icon
