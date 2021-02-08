@@ -1,4 +1,4 @@
-<img src="./.readme/app_icon.png" align="right" width="150px"><h1>Android IP Scanner</h1>
+<img src="./app/src/main/res/mimap-xxxhdpi/ic_launcher.png" align="right" width="150px"><h1>Android IP Scanner</h1>
 
 A bare-bone android IP scanner
 
