@@ -93,6 +93,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -125,9 +126,8 @@
                                   <option name="values">
                                     <map>
                                       <entry key="backgroundAssetType" value="COLOR" />
-                                      <entry key="backgroundColor" value="3891dc" />
+                                      <entry key="backgroundColor" value="2196f3" />
                                       <entry key="foregroundAssetType" value="CLIP_ART" />
-                                      <entry key="generatePlayStoreIcon" value="false" />
                                       <entry key="legacyIconShape" value="CIRCLE" />
                                     </map>
                                   </option>
