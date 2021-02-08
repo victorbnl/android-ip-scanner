@@ -12,7 +12,7 @@ import java.net.NetworkInterface
 fun isWifiEnabled(context: Context): Boolean =
     (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager).isWifiEnabled
 
-fun isPhoneConnected(context: Context): Boolean =
+fun isWifiConnected(context: Context): Boolean =
     (context.applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager).activeNetwork != null
 
 fun getPhoneIp(context: Context): Int =

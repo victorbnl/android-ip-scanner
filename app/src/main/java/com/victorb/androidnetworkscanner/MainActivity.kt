@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.LinearInterpolator
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.animation.doOnCancel
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -79,19 +80,26 @@ class MainActivity : AppCompatActivity() {
 
     private fun startScan(context: Context): Job =
         scanJobScope.launch {
-            runOnMainThread { animator?.start() }
-            val checkingJobs: ArrayList<Job> = arrayListOf()
-            for (ip in generateIpRange(intIpToReversedIntIp(getPhoneIp(context)), getNetworkPrefixLength(context))) {
-                checkingJobs.add(checkJobsScope.launch {
-                    val reversedIp: Int = intIpToReversedIntIp(ip)
-                    if (isIpReachable(reversedIp)) {
-                        val hostname: String = getIpHostname(reversedIp)
-                        val ipString: String = intIpToString(reversedIp)
-                        resultsAdapter.addItem(ipString, hostname)
-                    }
-                })
+            if (isWifiEnabled(context) && isWifiConnected(context)) {
+                runOnMainThread { animator?.start() }
+                val checkingJobs: ArrayList<Job> = arrayListOf()
+                for (ip in generateIpRange(
+                    intIpToReversedIntIp(getPhoneIp(context)),
+                    getNetworkPrefixLength(context)
+                )) {
+                    checkingJobs.add(checkJobsScope.launch {
+                        val reversedIp: Int = intIpToReversedIntIp(ip)
+                        if (isIpReachable(reversedIp)) {
+                            val hostname: String = getIpHostname(reversedIp)
+                            val ipString: String = intIpToString(reversedIp)
+                            resultsAdapter.addItem(ipString, hostname)
+                        }
+                    })
+                }
+                checkingJobs.joinAll()
+                runOnMainThread { animator?.cancel() }
+            } else {
+                runOnMainThread { Toast.makeText(context, "Please enable Wifi and connect to an access point", Toast.LENGTH_LONG).show() }
             }
-            checkingJobs.joinAll()
-            runOnMainThread { animator?.cancel() }
         }
 }
