@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.3.1]() - 2021-02-11
+## [1.3.1](https://github.com/victorbnl/android-ip-scanner/releases/tag/v1.3.1) - 2021-02-11
 
 ### Added
 
