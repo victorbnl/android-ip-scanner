@@ -3,7 +3,7 @@
 
 A bare-bone android IP scanner
 
-<a href="https://github.com/Victor-Bo/android-network-scanner/releases/latest"><img width="200px" src=".readme/get-it-on-github.svg"></a><a href="https://apt.izzysoft.de/fdroid/index/apk/com.victorb.androidnetworkscanner"><img width="200px" src=".readme/get-it-on-izzyondroid.png"></a>
+<a href="https://github.com/victorbnl/android-ip-scanner/releases/latest"><img width="200px" src=".readme/get-it-on-github.svg"></a><a href="https://apt.izzysoft.de/fdroid/index/apk/com.victorb.androidnetworkscanner"><img width="200px" src=".readme/get-it-on-izzyondroid.png"></a>
 
 ## Feedback
 
