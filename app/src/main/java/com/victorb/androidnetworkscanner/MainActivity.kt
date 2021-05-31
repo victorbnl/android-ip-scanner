@@ -79,13 +79,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun startScan(context: Context): Job =
         scanJobScope.launch {
+            // Check if wifi is on
             if (isWifiEnabled(context) && isWifiConnected(context)) {
+                // Start the refresh button animation
                 runOnMainThread { animator?.start() }
+                // List of check jobs
                 val checkingJobs: ArrayList<Job> = arrayListOf()
+                // Iterate through all the possible IPs
                 for (ip in generateIpRange(
                     intIpToReversedIntIp(getPhoneIp(context)),
                     getNetworkPrefixLength(context)
                 )) {
+                    // Add the jobs, which checks if the connection is up and adds it to the adapter
                     checkingJobs.add(checkJobsScope.launch {
                         val reversedIp: Int = intIpToReversedIntIp(ip)
                         if (isIpReachable(reversedIp)) {
@@ -95,8 +100,11 @@ class MainActivity : AppCompatActivity() {
                         }
                     })
                 }
+                // Wait for the checking jobs to finish
                 checkingJobs.joinAll()
+                // Stop the animation
                 runOnMainThread { animator?.cancel() }
+            // Wifi is off
             } else {
                 runOnMainThread { Toast.makeText(context, "Please enable Wifi and connect to an access point", Toast.LENGTH_LONG).show() }
             }
