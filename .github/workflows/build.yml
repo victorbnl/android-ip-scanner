@@ -1,0 +1,30 @@
+name: Release APK
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Signed APK
+        uses: victorbnl/build-signed-apk@main
+        with:
+          keystore: ${{ secrets.KEYSTORE_FILE }}
+          keystore_password: ${{ secrets.KEYSTORE_PASSWORD }}
+          key_alias: ${{ secrets.KEY_ALIAS }}
+          key_password: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Upload the apk as artifact
+        uses: actions/upload-artifact@v2.2.2
+        with:
+          name: APK
+          path: app/build/outputs/apk/release/app-release.apk
